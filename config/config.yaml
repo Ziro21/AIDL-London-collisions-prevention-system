@@ -1,0 +1,99 @@
+# =============================================================================
+# config.yaml
+# Configuration for IntelliSys London Collision Severity Prediction
+# WM9B7-15 AIDL Group Assessment — WMG, University of Warwick 2025/26
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Paths (relative to repository root)
+# ---------------------------------------------------------------------------
+paths:
+  data_raw:       data/raw
+  data_processed: data/processed
+  outputs_figures: outputs/figures
+  outputs_models:  outputs/models
+  outputs_shap:    outputs/shap
+
+# ---------------------------------------------------------------------------
+# Dataset
+# ---------------------------------------------------------------------------
+dataset:
+  collision_file:  dft-road-casualty-statistics-collision-2024.csv
+  casualty_file:   dft-road-casualty-statistics-casualty-2024.csv
+  vehicle_file:    dft-road-casualty-statistics-vehicle-2024.csv
+  london_forces:   [1, 48]          # Metropolitan Police=1, City of London=48
+  target_column:   accident_severity
+  severity_map:    {1: 0, 2: 1, 3: 2}   # Fatal=0, Serious=1, Slight=2
+  class_names:     [Fatal, Serious, Slight]
+
+# ---------------------------------------------------------------------------
+# Preprocessing
+# ---------------------------------------------------------------------------
+preprocessing:
+  missing_drop_threshold: 0.40     # Drop columns with > 40% missing
+  val_size:   0.15
+  test_size:  0.15
+  random_state: 42
+
+# ---------------------------------------------------------------------------
+# Model architecture (default / best configuration)
+# ---------------------------------------------------------------------------
+model:
+  hidden1:     128
+  hidden2:     64
+  dropout:     0.3
+  num_classes: 3
+
+# ---------------------------------------------------------------------------
+# Training
+# ---------------------------------------------------------------------------
+training:
+  epochs:             150
+  batch_size:         64
+  learning_rate:      0.001
+  patience:           10           # Early stopping patience
+  scheduler_patience: 5
+  scheduler_factor:   0.5
+  random_seed:        42
+
+# ---------------------------------------------------------------------------
+# Hyperparameter sweep (Notebook 4 experiments)
+# ---------------------------------------------------------------------------
+hyperparameter_sweep:
+  - name: baseline
+    hidden1: 128
+    hidden2: 64
+    dropout: 0.3
+    lr: 0.001
+  - name: larger_network
+    hidden1: 256
+    hidden2: 128
+    dropout: 0.3
+    lr: 0.001
+  - name: lower_dropout
+    hidden1: 128
+    hidden2: 64
+    dropout: 0.1
+    lr: 0.001
+  - name: lower_lr
+    hidden1: 128
+    hidden2: 64
+    dropout: 0.3
+    lr: 0.0003
+
+# ---------------------------------------------------------------------------
+# Interpretability
+# ---------------------------------------------------------------------------
+interpretability:
+  shap_background_samples: 200
+  shap_test_samples:        200
+  lime_num_features:        10
+  confidence_threshold:     0.6    # Below this, flag for human review
+
+# ---------------------------------------------------------------------------
+# Deployment thresholds (IntelliSys recommendation)
+# ---------------------------------------------------------------------------
+deployment:
+  alert_classes:          [0, 1]    # Fatal=0, Serious=1 trigger preventive actions
+  confidence_gate:        0.6       # Minimum softmax probability for auto-action
+  retraining_schedule:    annual    # Retrain on latest STATS19 validated year

@@ -1,10 +1,25 @@
-pandas
-numpy
-torch
-scikit-learn
-matplotlib
-seaborn
-shap
-lime
-jupyter
-imbalanced-learn
+# ── Core data stack ──────────────────────────────────────────────────────────
+pandas>=2.1
+numpy>=1.26
+
+# ── Deep learning ─────────────────────────────────────────────────────────────
+torch>=2.2
+
+# ── Classical ML / preprocessing ─────────────────────────────────────────────
+scikit-learn>=1.4
+imbalanced-learn>=0.12
+
+# ── Visualisation ─────────────────────────────────────────────────────────────
+matplotlib>=3.8
+seaborn>=0.13
+
+# ── Interpretability ──────────────────────────────────────────────────────────
+shap>=0.44
+lime>=0.2
+
+# ── Notebooks ─────────────────────────────────────────────────────────────────
+jupyter>=1.0
+ipykernel>=6.29
+
+# ── Config parsing ────────────────────────────────────────────────────────────
+pyyaml>=6.0
