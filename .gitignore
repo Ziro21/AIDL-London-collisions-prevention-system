@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+.venv/
+gen_nb2_*.py
+.claude/
